@@ -112,6 +112,8 @@ public class NettyServer {
   private final int sendBufferSize;
   /** Receive buffer size */
   private final int receiveBufferSize;
+  /** Frame decoder max frame length */
+  private final int maxFrameLength;
   /** Boss eventloop group */
   private final EventLoopGroup bossGroup;
   /** Worker eventloop group */
@@ -151,6 +153,7 @@ public class NettyServer {
     this.exceptionHandler = exceptionHandler;
     sendBufferSize = GiraphConstants.SERVER_SEND_BUFFER_SIZE.get(conf);
     receiveBufferSize = GiraphConstants.SERVER_RECEIVE_BUFFER_SIZE.get(conf);
+    maxFrameLength = GiraphConstants.SERVER_MAX_FRAME_LENGTH.get(conf);
 
     workerRequestReservedMap = new WorkerRequestReservedMap(conf);
 
@@ -272,7 +275,7 @@ public class NettyServer {
                 handlerToUseExecutionGroup, executionGroup, ch);
           }
           PipelineUtils.addLastWithExecutorCheck("requestFrameDecoder",
-              new LengthFieldBasedFrameDecoder(1024 * 1024 * 1024, 0, 4, 0, 4),
+              new LengthFieldBasedFrameDecoder(maxFrameLength, 0, 4, 0, 4),
               handlerToUseExecutionGroup, executionGroup, ch);
           PipelineUtils.addLastWithExecutorCheck("requestDecoder",
               new RequestDecoder(conf, inByteCounter),
@@ -322,7 +325,7 @@ public class NettyServer {
                 handlerToUseExecutionGroup, executionGroup, ch);
           }
           PipelineUtils.addLastWithExecutorCheck("requestFrameDecoder",
-              new LengthFieldBasedFrameDecoder(1024 * 1024 * 1024, 0, 4, 0, 4),
+              new LengthFieldBasedFrameDecoder(maxFrameLength, 0, 4, 0, 4),
               handlerToUseExecutionGroup, executionGroup, ch);
           PipelineUtils.addLastWithExecutorCheck("requestDecoder",
               new RequestDecoder(conf, inByteCounter),

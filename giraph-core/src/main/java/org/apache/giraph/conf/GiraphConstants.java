@@ -733,6 +733,11 @@ public interface GiraphConstants {
       new IntConfOption("giraph.serverReceiveBufferSize", 512 * ONE_KB,
           "Server receive buffer size");
 
+  /** Netty server decoder max frame length */
+  IntConfOption SERVER_MAX_FRAME_LENGTH =
+      new IntConfOption("giraph.serverMaxFrameLength", 1024 * ONE_MB,
+          "Netty server max frame length");
+
   /** Maximum size of messages (in bytes) per peer before flush */
   IntConfOption MAX_MSG_REQUEST_SIZE =
       new IntConfOption("giraph.msgRequestSize", 512 * ONE_KB,
